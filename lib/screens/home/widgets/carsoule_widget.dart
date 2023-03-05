@@ -36,8 +36,6 @@ class CarsouleWidget extends StatelessWidget {
                 ),
                 padding: const EdgeInsets.all(8),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
                   children: const [
                     Text(
                       "Get the special Discount",

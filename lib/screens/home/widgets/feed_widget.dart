@@ -2,14 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:mini_store/constants/global_colors.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
+import 'package:mini_store/models/product_model.dart';
+import 'package:provider/provider.dart';
 
 class FeedWidget extends StatelessWidget {
-  const FeedWidget({super.key, required this.feedAction});
+  const FeedWidget({
+    super.key,
+    required this.feedAction,
+  });
 
   final void Function() feedAction;
+  // final List imageurl;
+  // final String title;
+  // final int price;
 
   @override
   Widget build(BuildContext context) {
+    final ProductModel productModel = Provider.of<ProductModel>(context);
     final size = MediaQuery.of(context).size;
     return Padding(
       padding: const EdgeInsets.all(2.0),
@@ -45,7 +54,7 @@ class FeedWidget extends StatelessWidget {
                           ),
                           children: <TextSpan>[
                             TextSpan(
-                              text: "168.0",
+                              text: productModel.price.toString(),
                               style: TextStyle(
                                 color: lightTextColor,
                                 fontWeight: FontWeight.w600,
@@ -67,8 +76,7 @@ class FeedWidget extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: FancyShimmerImage(
-                  imageUrl:
-                      "https://png.pngtree.com/png-clipart/20201209/original/pngtree-casual-shoes-png-image_5640199.jpg",
+                  imageUrl: productModel.images![0],
                   height: size.height * 0.2,
                   width: double.infinity,
                   boxFit: BoxFit.cover,
@@ -80,15 +88,17 @@ class FeedWidget extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                  "Title",
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w700,
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    productModel.title!,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                    style: const TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
               ),

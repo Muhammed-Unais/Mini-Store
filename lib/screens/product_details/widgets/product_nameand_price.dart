@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:mini_store/constants/global_colors.dart';
+import 'package:mini_store/models/product_model.dart';
 
 class ProductNameAndPrice extends StatelessWidget {
   const ProductNameAndPrice({
-    super.key,
+    super.key, required this.productModel,
   });
+
+  final ProductModel productModel;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Flexible(
+         Flexible(
           flex: 3,
           child: Text(
-            "Lorem ipsum",
+            productModel.title!,
             textAlign: TextAlign.start,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 28,
               color: Colors.black,
               fontWeight: FontWeight.bold,
@@ -34,7 +37,7 @@ class ProductNameAndPrice extends StatelessWidget {
               ),
               children: <TextSpan>[
                 TextSpan(
-                  text: "168.00",
+                  text: productModel.price.toString(),
                   style: TextStyle(
                     color: lightTextColor,
                     fontWeight: FontWeight.bold,

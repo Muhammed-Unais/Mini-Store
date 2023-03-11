@@ -1,13 +1,16 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_store/constants/global_colors.dart';
+import 'package:mini_store/models/product_model.dart';
 import 'package:mini_store/screens/feed_screen/feed_screen.dart';
 import 'package:mini_store/screens/home/widgets/appbar.dart';
 import 'package:mini_store/screens/home/widgets/carsoule_widget.dart';
 import 'package:mini_store/screens/home/widgets/search_textfield.dart';
 import 'package:mini_store/screens/home/widgets/titiles_and_viewmore.dart';
 import 'package:mini_store/screens/product_details/product_details.dart';
+import 'package:mini_store/services/api_handler.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:provider/provider.dart';
 
 import 'widgets/feed_widget.dart';
 
@@ -20,7 +23,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late TextEditingController textEditingController;
-
+  // List<ProductModel> productList = [];
   @override
   void initState() {
     textEditingController = TextEditingController();
@@ -32,6 +35,17 @@ class _HomeScreenState extends State<HomeScreen> {
     textEditingController.dispose();
     super.dispose();
   }
+
+  // @override
+  // void didChangeDependencies() {
+  //   getAlldata();
+  //   super.didChangeDependencies();
+  // }
+
+  // Future getAlldata() async {
+  //   productList = await ApiHandler.getAllProducts();
+  //   setState(() {});
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -102,31 +116,61 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         },
                       ),
-                      GridView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: 10,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 0.0,
-                          mainAxisSpacing: 0.0,
-                          childAspectRatio: 1 / 1.4,
-                        ),
-                        itemBuilder: (context, index) {
-                          return SizedBox(
-                            width: size.width * 0.4,
-                            child: FeedWidget(
-                              feedAction: () {
-                                Navigator.push(
-                                  context,
-                                  PageTransition(
-                                    type: PageTransitionType.fade,
-                                    child: const ProductDeatilsScreen(),
-                                  ),
-                                );
-                              },
+                      FutureBuilder<List<ProductModel>>(
+                        future: ApiHandler.getProduct(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                              child: CircularProgressIndicator(
+                                color: Colors.black,
+                                strokeWidth: 2,
+                              ),
+                            );
+                          } else if (snapshot.hasError) {
+                            return Center(
+                              child: Text(
+                                "${snapshot.error}",
+                                style: const TextStyle(color: Colors.black),
+                              ),
+                            );
+                          } else if (snapshot.data == null) {
+                            return Center(
+                              child: Text("${snapshot.error}"),
+                            );
+                          }
+                          return GridView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: snapshot.data!.length,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 0.0,
+                              mainAxisSpacing: 0.0,
+                              childAspectRatio: 1 / 1.4,
                             ),
+                            itemBuilder: (context, index) {
+                              return SizedBox(
+                                width: size.width * 0.4,
+                                child: ChangeNotifierProvider.value(
+                                  value: snapshot.data![index],
+                                  child: FeedWidget(
+                                    feedAction: () {
+                                      Navigator.push(
+                                        context,
+                                        PageTransition(
+                                          type: PageTransitionType.fade,
+                                          child: ProductDeatilsScreen(
+                                          productmodel: snapshot.data![index],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              );
+                            },
                           );
                         },
                       ),

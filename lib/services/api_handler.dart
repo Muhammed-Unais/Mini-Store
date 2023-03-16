@@ -8,9 +8,10 @@ import 'package:mini_store/models/product_model.dart';
 import 'package:mini_store/models/user_model.dart';
 
 class ApiHandler with ChangeNotifier {
-  static Future<List<dynamic>> getAllProducts({required String path}) async {
+  static Future<List<dynamic>> getAllProducts({required String path,String? limit}) async {
     try {
-      final uri = Uri.parse("https://api.escuelajs.co/api/v1/$path");
+      final uri = Uri.https("api.escuelajs.co", "api/v1/$path",
+          path == "products" ? {"offset":"0","limit":limit,} : {});
       final Response response = await http.get(uri);
       final data = jsonDecode(response.body);
       if (response.statusCode != 200) {
@@ -24,8 +25,8 @@ class ApiHandler with ChangeNotifier {
     }
   }
 
-  static Future<List<ProductModel>> getProduct() async {
-    final items = await getAllProducts(path: "products");
+  static Future<List<ProductModel>> getProduct(String? limit) async {
+    final items = await getAllProducts(path: "products",limit: limit);
     return ProductModel.productFromSnapshot(items);
   }
 
@@ -43,7 +44,7 @@ class ApiHandler with ChangeNotifier {
     try {
       final uri = Uri.parse("https://api.escuelajs.co/api/v1/products/$id");
       final Response response = await http.get(uri);
-      final jsonData = jsonDecode(response.body);
+      var jsonData = jsonDecode(response.body);
       if (response.statusCode != 200) {
         throw jsonData['message'];
       }

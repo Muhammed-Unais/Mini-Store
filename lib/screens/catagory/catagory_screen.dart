@@ -18,7 +18,7 @@ class CatagoryScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: FutureBuilder<List<ProductModel>>(
-          future: ApiHandler.getProduct(),
+          future: ApiHandler.getProduct("10"),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(

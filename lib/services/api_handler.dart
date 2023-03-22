@@ -15,7 +15,7 @@ class ApiHandler with ChangeNotifier {
       final Response response = await http.get(uri);
       final data = jsonDecode(response.body);
       if (response.statusCode != 200) {
-        throw data['message'];
+        throw data['message']; 
       }
       final jsonData = jsonDecode(response.body) as List;
       return jsonData;

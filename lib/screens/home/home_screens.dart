@@ -35,18 +35,6 @@ class _HomeScreenState extends State<HomeScreen> {
     textEditingController.dispose();
     super.dispose();
   }
-
-  // @override
-  // void didChangeDependencies() {
-  //   getAlldata();
-  //   super.didChangeDependencies();
-  // }
-
-  // Future getAlldata() async {
-  //   productList = await ApiHandler.getAllProducts();
-  //   setState(() {});
-  // }
-
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
